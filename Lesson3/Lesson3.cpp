@@ -1,10 +1,12 @@
 #include <iostream>
-#include "ClassLesson3.h"
+#include "Tree.h"
+#include "House.h"
+#include "Motorbike.h"
+#include "Car.h"
 #include <list>
 #include <memory>
 #include <string>
 
-using namespace MyClass;
 
 static std::list<std::shared_ptr<BaseObject>> listObj;
 
@@ -13,7 +15,7 @@ void CreateObject(int n) {
 	{
 		char* index;
 		std::shared_ptr<BaseObject> A = std::make_shared<BaseObject>();
-		A->id = i;
+		
 		switch (i % 4) {
 		case 0:
 			A = std::make_shared<Tree>();
@@ -32,6 +34,7 @@ void CreateObject(int n) {
 			strcpy(A->name, "Car");
 			break;
 		}
+		A->id = i+1;
 		listObj.push_back(A);
 	}
 }
@@ -44,7 +47,7 @@ int main()
 	CreateObject(n);
 	for (auto obj : listObj) {
 		obj->getName();
-		printf("Object thu %d co ten la: %s\n", obj->id, obj->getName());
+		//printf("Object thu %d co ten la: %s\n", obj->id, obj->getName());
 	}
 	for (auto obj : listObj) {
 		obj->move();
