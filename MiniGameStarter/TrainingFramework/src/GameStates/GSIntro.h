@@ -19,7 +19,7 @@ public:
 	void	HandleMouseMoveEvents(int x, int y) override;
 	void	Update(float deltaTime) override;
 	void	Draw() override;
-
+	void InitSound() {};
 private:
 	std::shared_ptr<Sprite2D> m_logo;
 	float	m_time;

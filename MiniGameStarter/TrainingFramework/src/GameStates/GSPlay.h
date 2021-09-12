@@ -1,6 +1,6 @@
 #pragma once
 #include "GameStateBase.h"
-
+#include "soloud_wav.h"
 
 
 class Sprite2D;
@@ -30,7 +30,7 @@ public:
 	void	HandleMouseMoveEvents(int x, int y) override;
 	void	Update(float deltaTime) override;
 	void	Draw() override;
-
+	void InitSound() override;
 private:
 	std::shared_ptr<Sprite2D>	m_background;
 	std::shared_ptr<Text>		m_Tscore;
@@ -38,12 +38,16 @@ private:
 	std::shared_ptr<Hero> m_hero;
 	std::list<std::shared_ptr<Enemy>> m_enemies;
 	std::list<std::shared_ptr<Bomb>> m_bombs;
+	SoLoud::Wav m_sound_bg;
+	SoLoud::Wav m_sound;
+	bool soundplay;
 	bool m_State;
 	bool m_bomb;
 	int m_score;
 	float m_time;
 	void CreateEnemy();
 	void CreateBomb();
+	void EndGame();
 
 };
 

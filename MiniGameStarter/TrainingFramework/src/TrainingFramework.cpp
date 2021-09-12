@@ -64,6 +64,5 @@ GLint _tmain(GLint argc, _TCHAR* argv[])
 
 	//printf("Press any key...\n");
 	//_getch();
-
 	return 0;
 }

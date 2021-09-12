@@ -43,8 +43,9 @@ void GSEnd::Init()
 	m_listButton.push_back(button);
 	FILE* f;
 	f = fopen("score.sav", "r");
-	int max, score;
+	int max, score,temps;
 	fscanf_s(f, "%d", &max);
+	fscanf_s(f, "%d", &temps);
 	fscanf_s(f, "%d", &score);
 	fclose(f);
 

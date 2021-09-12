@@ -2,6 +2,7 @@
 #include "GameStateMachine.h"
 #include "GameStateBase.h"
 
+
 GameStateMachine::GameStateMachine() : m_running(true), m_pActiveState(nullptr), m_pNextState(nullptr), m_fullscreen(false)
 {
 }
@@ -24,12 +25,15 @@ void GameStateMachine::Cleanup()
 void GameStateMachine::ChangeState(StateType state)
 {
 	std::shared_ptr<GameStateBase> nextState = GameStateBase::CreateState(state);
+	this->CurrentState()->DeinitSound();
+	nextState->InitSound();
 	ChangeState(nextState);
 }
 
 void GameStateMachine::ChangeState(std::shared_ptr<GameStateBase> state)
 {
 	m_pNextState = state;
+
 }
 
 void GameStateMachine::PushState(StateType state)
@@ -47,6 +51,7 @@ void GameStateMachine::PopState()
 {
 	// cleanup the current state
 	if (!m_StateStack.empty()) {
+		m_StateStack.back()->DeinitSound();
 		m_StateStack.back()->Exit();
 		m_StateStack.pop_back();
 	}
@@ -55,6 +60,7 @@ void GameStateMachine::PopState()
 	if (!m_StateStack.empty()) {
 		m_StateStack.back()->Resume();
 		m_pActiveState = m_StateStack.back();
+		m_pActiveState->InitSound();
 	}
 }
 
@@ -84,3 +90,4 @@ void  GameStateMachine::PerformStateChange()
 
 	m_pNextState = 0;
 }
+

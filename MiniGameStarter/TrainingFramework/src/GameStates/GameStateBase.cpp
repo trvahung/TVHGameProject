@@ -12,6 +12,7 @@
 #include "../GSLeader.h"
 #include "../GSHowToPlay.h"
 
+
 GameStateBase::GameStateBase(StateType stateType) : m_stateType(stateType)
 {
 }
@@ -55,4 +56,8 @@ std::shared_ptr<GameStateBase> GameStateBase::CreateState(StateType stt)
 StateType GameStateBase::GetGameStateType()
 {
 	return m_stateType;
+}
+
+void GameStateBase::DeinitSound() {
+	gSoLoud.deinit();
 }

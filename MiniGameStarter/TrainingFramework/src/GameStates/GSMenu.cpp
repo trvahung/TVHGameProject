@@ -1,5 +1,7 @@
 #include "GSMenu.h"
 #include "Camera.h"
+#include "soloud.h"
+#include "soloud_wav.h"
 
 GSMenu::GSMenu() : GameStateBase(StateType::STATE_MENU), 
 	m_background(nullptr), m_listButton(std::list<std::shared_ptr<GameButton>>{}), m_textGameName(nullptr)
@@ -78,7 +80,10 @@ void GSMenu::Init()
 	shader = ResourceManagers::GetInstance()->GetShader("TextShader");
 	std::shared_ptr<Font> font = ResourceManagers::GetInstance()->GetFont("Brightly Crush Shine.otf");
 	m_textGameName = std::make_shared< Text>(shader, font, "The Last One", Vector4(1.0f, 0.5f, 0.0f, 1.0f), 3.0f);
-	m_textGameName->Set2DPosition(Vector2(60, 200));
+	m_textGameName->Set2DPosition(Vector2(20, 200));
+
+	//Sound
+	InitSound();
 }
 
 void GSMenu::Exit()
@@ -125,6 +130,9 @@ void GSMenu::Update(float deltaTime)
 	{
 		it->Update(deltaTime);
 	}
+	if (gSoLoud.getActiveVoiceCount() <= 0) {
+		gSoLoud.play(m_sound);
+	}
 }
 
 void GSMenu::Draw()
@@ -135,4 +143,11 @@ void GSMenu::Draw()
 		it->Draw();
 	}
 	m_textGameName->Draw();
+}
+
+void GSMenu::InitSound() {
+	//sound
+	m_sound.load("ES_Forever on My Way.mp3");
+	gSoLoud.init();
+	gSoLoud.play(m_sound);
 }

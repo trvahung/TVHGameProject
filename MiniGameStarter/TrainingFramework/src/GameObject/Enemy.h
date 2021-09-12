@@ -14,4 +14,4 @@ protected:
 };
 
 #define BASE_SPEED	10
-#define SPEED_UP	0.2f
+#define SPEED_UP	0.1f

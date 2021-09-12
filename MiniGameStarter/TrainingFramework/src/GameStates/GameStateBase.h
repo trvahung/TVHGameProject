@@ -1,7 +1,7 @@
 #pragma once
 #include "GameStateMachine.h"
 #include "GameManager/ResourceManagers.h"
-
+#include "soloud.h"
 
 class GameStateBase
 {
@@ -26,7 +26,10 @@ public:
 	static std::shared_ptr<GameStateBase> CreateState(StateType stt);
 	StateType GetGameStateType();
 	static int m_keyPressed;
+	void DeinitSound();
+	virtual void InitSound() = 0;
 protected:
 	StateType m_stateType;
+	SoLoud::Soloud gSoLoud;
 };
 

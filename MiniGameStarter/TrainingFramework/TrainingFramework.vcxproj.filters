@@ -180,4 +180,9 @@
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="ES_Forever on My Way.mp3" />
+    <Media Include="explode.mp3" />
+    <Media Include="zombie.mp3" />
+  </ItemGroup>
 </Project>

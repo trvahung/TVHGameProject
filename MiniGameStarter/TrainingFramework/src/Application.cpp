@@ -1,7 +1,7 @@
 #include "Application.h"
 #include "GameStates/GameStateMachine.h"
 #include "GameStates/GameStatebase.h"
-
+#include "soloud.h"
 Application::Application()
 {
 }
@@ -16,10 +16,14 @@ void Application::Init()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	//Sound
+
 	// Create a 2D camera
 	m_camera = std::make_shared<Camera>(0, 0, Globals::screenWidth, 0, Globals::screenHeight, -1.0f, 1.0f, 10.0f);
 
 	GameStateMachine::GetInstance()->PushState(StateType::STATE_INTRO);
+	
+	
 }
 
 void Application::Update(GLfloat deltaTime)

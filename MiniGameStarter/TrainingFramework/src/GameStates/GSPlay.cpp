@@ -77,6 +77,9 @@ void GSPlay::Init()
 	//time
 	m_time = 10;
 
+	//sound
+	InitSound();
+	soundplay = true;
 }
 
 void GSPlay::Exit()
@@ -202,6 +205,11 @@ void GSPlay::Update(float deltaTime)
 			bomb->m_time += deltaTime;
 			if (bomb->m_time >= EXPLODE_TIME) {
 				bomb->Explode(deltaTime);
+				if (soundplay) {
+					m_sound.load("explode.mp3");
+					gSoLoud.play(m_sound);
+					soundplay = false;
+				}
 			}
 			if (bomb->m_time >= EXPLODE_TIME + 0.5f) {
 				int k = 1;
@@ -210,11 +218,16 @@ void GSPlay::Update(float deltaTime)
 				for (auto enemy : m_enemies) {
 					GLfloat a = enemy->GetPosition().x - bomb->GetPosition().x;
 					GLfloat b = enemy->GetPosition().y - bomb->GetPosition().y;
-					if (sqrt(a * a + b * b) <= 75) {
+					if (sqrt(a * a + b * b) <= 70) {
 						destroyedEnemy.push_back(enemy);
 						m_score += k;
 						k++;
 					}
+				}
+				GLfloat a = m_hero->GetPosition().x - bomb->GetPosition().x;
+				GLfloat b = m_hero->GetPosition().y - bomb->GetPosition().y;
+				if (sqrt(a * a + b * b) <= 70) {
+					EndGame();
 				}
 				for (auto enemy : destroyedEnemy) {
 					m_enemies.remove(enemy);
@@ -224,6 +237,7 @@ void GSPlay::Update(float deltaTime)
 		}
 		for (auto bomb : destroyedBomb) {
 			m_bombs.remove(bomb);
+			soundplay = true;
 		}
 		//Enemies
 		if (m_time >= ENEMY_CREATE_TIME) {
@@ -237,16 +251,7 @@ void GSPlay::Update(float deltaTime)
 			GLfloat a = enemy->GetPosition().x - pos.x;
 			GLfloat b = enemy->GetPosition().y - pos.y;
 			if (sqrt(a * a + b * b) <= 25) {
-				FILE* f;
-				f = fopen("score.sav", "r");
-				int max = 0;
-				fscanf_s(f,"%d", &max);
-				if (max < m_score) max = m_score;
-				fclose(f);
-				f = fopen("score.sav", "w");
-				fprintf(f, "%d\n%d", max, m_score);
-				fclose(f);
-				GameStateMachine::GetInstance()->ChangeState(StateType::STATE_END);
+				EndGame();
 			}
 		}
 
@@ -255,6 +260,11 @@ void GSPlay::Update(float deltaTime)
 		std::shared_ptr<Font> font = ResourceManagers::GetInstance()->GetFont("Brightly Crush Shine.otf");
 		m_Tscore = std::make_shared< Text>(shader, font, "score: " + std::to_string(m_score), TextColor::RED, 1.0);
 		m_Tscore->Set2DPosition(Vector2(5, 25));
+
+		//Sound
+		if (gSoLoud.getActiveVoiceCount() <= 0) {
+			gSoLoud.play(m_sound_bg);
+		}
 	}
 }
 
@@ -276,6 +286,8 @@ void GSPlay::Draw()
 }
 
 void GSPlay::CreateEnemy() {
+	m_sound.load("zombie.mp3");
+	gSoLoud.play(m_sound);
 	int numEnemy = (int) m_enemies.size();
 	if (numEnemy <= MAX_ENEMY) {
 		auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
@@ -313,4 +325,29 @@ void GSPlay::CreateBomb() {
 		C_bomb->Set2DPosition(m_hero->GetPosition().x, m_hero->GetPosition().y);
 		m_bombs.push_back(C_bomb);
 	}
+}
+
+void GSPlay::EndGame() {
+	m_keyPressed = 0;
+	FILE* f;
+	f = fopen("score.sav", "r");
+	int max,temps;
+	fscanf_s(f, "%d", &max);
+	fscanf_s(f, "%d", &temps);
+	if (max % 31 != temps) {
+		max = 0;
+	}
+	if (max < m_score) max = m_score;
+	fclose(f);
+	f = fopen("score.sav", "w");
+	fprintf(f, "%d\n%d\n%d", max, max%31, m_score);
+	fclose(f);
+	GameStateMachine::GetInstance()->ChangeState(StateType::STATE_END);
+}
+
+void GSPlay::InitSound() {
+	//Sound
+	gSoLoud.init();
+	m_sound_bg.load("ES_Forever on My Way.mp3");
+	gSoLoud.playBackground(m_sound_bg);
 }

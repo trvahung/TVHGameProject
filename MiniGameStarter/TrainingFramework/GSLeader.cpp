@@ -44,8 +44,11 @@ void GSLeader::Init()
 	m_listButton.push_back(button);
 	FILE* f;
 	f = fopen("score.sav", "r");
-	int max;
-	fscanf_s(f, "%d", &max);
+	int max,temps;
+	fscanf_s(f, "%d\n%d", &max,&temps);
+	if (max % 31 != temps) {
+		max = 0;
+	}
 	fclose(f);
 
 	// credit text
